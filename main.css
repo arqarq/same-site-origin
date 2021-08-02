@@ -1,0 +1,20 @@
+:root {
+  --DEFAULT-PADDING: 8px
+}
+
+dialog {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19)
+}
+
+div.formTemplateRoot div:first-child {
+  margin-bottom: var(--DEFAULT-PADDING)
+}
+
+div.formTemplateRoot div:last-child {
+  display: flex;
+  justify-content: space-around
+}
+
+div.formTemplateRoot button {
+  flex-grow: 1
+}

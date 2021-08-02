@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Show images from flickr API</title>
+  <link href="main.css"
+        rel="stylesheet">
+  <script defer
+          src="main.js"></script>
+</head>
+<body>
+<template id="startTemplate">
+  <div class="startTemplateRoot">
+    <button onclick="start()"
+            type="button">Start</button>
+  </div>
+</template>
+<template id="formTemplate">
+  <div class="formTemplateRoot">
+    <div>
+      <label for="api_key">API key:</label>
+      <input id="api_key"
+             type="text">
+    </div>
+    <div>
+      <button onclick="cancel()"
+              type="button">Anuluj</button>
+      <button onclick="sendPressed()"
+              type="button">OK</button>
+    </div>
+  </div>
+</template>
+<template id="loadedTemplate">
+  <div>
+    Załadowane
+  </div>
+</template>
+
+<dialog id="dialogContainer"></dialog>
+</body>
+</html>
