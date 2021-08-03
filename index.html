@@ -6,7 +6,8 @@
   <link href="main.css"
         rel="stylesheet">
   <script defer
-          src="main.js"></script>
+          src="first.js"></script>
+  <script src="main.js"></script>
 </head>
 <body>
 <template id="startTemplate">
@@ -30,9 +31,14 @@
     </div>
   </div>
 </template>
-<template id="loadedTemplate">
+<template id="loadingTemplate">
   <div>
-    Załadowane
+    Wczytywanie...
+  </div>
+</template>
+<template id="errorTemplate">
+  <div>
+    SNAFU
   </div>
 </template>
 

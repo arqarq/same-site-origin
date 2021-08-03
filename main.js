@@ -1,52 +1,55 @@
 'use strict'
-
-const DEFAULT_PADDING = getComputedStyle(document.querySelector(':root')).getPropertyValue('--DEFAULT-PADDING')
-let tempRefForDialogContainer
-let tempRefForBody
-
-const firstElementChildOfContentOfStartTemplate = document.querySelector('template#startTemplate').content.firstElementChild
-const firstElementChildOfContentOfFormTemplate = document.querySelector('template#formTemplate').content.firstElementChild
-const firstElementChildOfContentOfLoadedTemplate = document.querySelector('template#loadedTemplate').content.firstElementChild
-const dialogContainer = document.querySelector('dialog#dialogContainer')
-const body = document.body
-tempRefForDialogContainer = dialogContainer.appendChild(firstElementChildOfContentOfStartTemplate.cloneNode(true));
-openCloseModal(true)
+let to
 
 function start() {
-  dialogContainer.removeChild(tempRefForDialogContainer)
-  tempRefForDialogContainer = dialogContainer.appendChild(firstElementChildOfContentOfFormTemplate.cloneNode(true))
+  DIALOG_REF.removeChild(tempRefForDialogContainer)
+  tempRefForDialogContainer = DIALOG_REF.appendChild(REFS.formTemplate)
   dialogToTopRight(false)
-  if (body.contains(tempRefForBody)) {
-    body.removeChild(tempRefForBody)
+  if (BODY_REF.contains(tempRefForBody)) {
+    BODY_REF.removeChild(tempRefForBody)
   }
+  clearTimeout(to)
 }
 
 function sendPressed() {
   dialogToTopRight(true)
-  dialogContainer.removeChild(tempRefForDialogContainer)
-  tempRefForDialogContainer = dialogContainer.appendChild(firstElementChildOfContentOfStartTemplate.cloneNode(true))
-  tempRefForBody = body.appendChild(firstElementChildOfContentOfLoadedTemplate.cloneNode(true))
+  DIALOG_REF.removeChild(tempRefForDialogContainer)
+  tempRefForDialogContainer = DIALOG_REF.appendChild(REFS.startTemplate)
+  prepareJson()
 }
 
 function cancel() {
-  dialogContainer.removeChild(tempRefForDialogContainer)
-  tempRefForDialogContainer = dialogContainer.appendChild(firstElementChildOfContentOfStartTemplate)
+  DIALOG_REF.removeChild(tempRefForDialogContainer)
+  tempRefForDialogContainer = DIALOG_REF.appendChild(REFS.startTemplate)
 }
 
 function openCloseModal(open) {
-  open ? dialogContainer.setAttribute('open', '') : dialogContainer.removeAttribute('open')
+  open ? DIALOG_REF.setAttribute('open', '') : DIALOG_REF.removeAttribute('open')
 }
 
 function dialogToTopRight(move) {
   if (move) {
-    dialogContainer.style.margin = `0 ${DEFAULT_PADDING} 0 0`
-    dialogContainer.style.position = 'fixed'
-    dialogContainer.style.left = 'unset'
-    dialogContainer.style.right = '0'
+    DIALOG_REF.style.margin = `0 ${DEFAULT_PADDING} 0 0`
+    DIALOG_REF.style.position = 'fixed'
+    DIALOG_REF.style.left = 'unset'
+    DIALOG_REF.style.right = '0'
     return
   }
-  dialogContainer.style.removeProperty('margin')
-  dialogContainer.style.removeProperty('position')
-  dialogContainer.style.removeProperty('left')
-  dialogContainer.style.removeProperty('right')
+  DIALOG_REF.style.removeProperty('margin')
+  DIALOG_REF.style.removeProperty('position')
+  DIALOG_REF.style.removeProperty('left')
+  DIALOG_REF.style.removeProperty('right')
+}
+
+function prepareJson() {
+  tempRefForBody = BODY_REF.appendChild(REFS.loadingTemplate)
+  to = setTimeout(() => {
+    showError()
+    clearTimeout(to)
+  }, 4000)
+}
+
+function showError() {
+  BODY_REF.removeChild(tempRefForBody)
+  tempRefForBody = BODY_REF.appendChild(REFS.errorTemplate)
 }
