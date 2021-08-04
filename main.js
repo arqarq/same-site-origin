@@ -1,55 +1,62 @@
 'use strict'
 let to
+let apiKeyOrAddress
+let request
 
 function start() {
-  DIALOG_REF.removeChild(tempRefForDialogContainer)
-  tempRefForDialogContainer = DIALOG_REF.appendChild(REFS.formTemplate)
-  dialogToTopRight(false)
-  if (BODY_REF.contains(tempRefForBody)) {
-    BODY_REF.removeChild(tempRefForBody)
-  }
+  clearBodyRef()
+  showTemplateInDialog(REFS.formTemplate)
+  dialogToTopRight(true)
   clearTimeout(to)
+  request?.abort()
 }
 
 function sendPressed() {
-  dialogToTopRight(true)
-  DIALOG_REF.removeChild(tempRefForDialogContainer)
-  tempRefForDialogContainer = DIALOG_REF.appendChild(REFS.startTemplate)
+  dialogToTopRight(false)
+  cancel()
   prepareJson()
 }
 
 function cancel() {
-  DIALOG_REF.removeChild(tempRefForDialogContainer)
-  tempRefForDialogContainer = DIALOG_REF.appendChild(REFS.startTemplate)
+  clearDialogRef()
+  showTemplateInDialog(REFS.startTemplate)
 }
 
 function openCloseModal(open) {
   open ? DIALOG_REF.setAttribute('open', '') : DIALOG_REF.removeAttribute('open')
 }
 
-function dialogToTopRight(move) {
-  if (move) {
-    DIALOG_REF.style.margin = `0 ${DEFAULT_PADDING} 0 0`
-    DIALOG_REF.style.position = 'fixed'
-    DIALOG_REF.style.left = 'unset'
-    DIALOG_REF.style.right = '0'
+function prepareJson() {
+  showTemplateInBody(REFS.loadingTemplate)
+  to = setTimeout(() => {
+    apiKeyOrAddress = `https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=${apiKeyOrAddress}` +
+      '&format=json&tags=cat,dog&nojsoncallback=1&media=photos&per_page=6'
+    request = new XMLHttpRequest()
+    request.addEventListener('load', reqListener)
+    request.addEventListener('error', () => showTemplateInBody(REFS.errorTemplate))
+    request.open('GET', apiKeyOrAddress)
+    request.send()
+    clearTimeout(to)
+  }, 2000)
+}
+
+function reqListener() {
+  const parsed = JSON.parse(this.responseText)
+  if (parsed.stat === 'ok') {
+    showTemplateInBody(REFS.loadedTemplate)
     return
   }
-  DIALOG_REF.style.removeProperty('margin')
-  DIALOG_REF.style.removeProperty('position')
-  DIALOG_REF.style.removeProperty('left')
-  DIALOG_REF.style.removeProperty('right')
+  console.log(parsed.message)
+  showTemplateInBody(REFS.errorTemplate)
 }
 
-function prepareJson() {
-  tempRefForBody = BODY_REF.appendChild(REFS.loadingTemplate)
-  to = setTimeout(() => {
-    showError()
-    clearTimeout(to)
-  }, 4000)
-}
-
-function showError() {
-  BODY_REF.removeChild(tempRefForBody)
-  tempRefForBody = BODY_REF.appendChild(REFS.errorTemplate)
+function parseApiKey(ev) {
+  OK_BUTTON_REF = document.querySelector('button#ok_button')
+  if ((apiKeyOrAddress = ev.target.value).length === 32) {
+    OK_BUTTON_REF.removeAttribute('disabled')
+    return
+  }
+  if (!OK_BUTTON_REF.hasAttribute('disabled')) {
+    OK_BUTTON_REF.setAttribute('disabled', '')
+  }
 }

@@ -8,6 +8,7 @@
   <script defer
           src="first.js"></script>
   <script src="main.js"></script>
+  <script src="dialog.js"></script>
 </head>
 <body>
 <template id="startTemplate">
@@ -21,12 +22,16 @@
     <div>
       <label for="api_key">API key:</label>
       <input id="api_key"
+             maxlength="32"
+             oninput="parseApiKey(event)"
              type="text">
     </div>
     <div>
       <button onclick="cancel()"
               type="button">Anuluj</button>
-      <button onclick="sendPressed()"
+      <button disabled
+              id="ok_button"
+              onclick="sendPressed()"
               type="button">OK</button>
     </div>
   </div>
@@ -41,7 +46,11 @@
     SNAFU
   </div>
 </template>
-
+<template id="loadedTemplate">
+  <div>
+    Przyszła odpowiedź
+  </div>
+</template>
 <dialog id="dialogContainer"></dialog>
 </body>
 </html>
