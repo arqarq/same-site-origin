@@ -2,7 +2,7 @@
 const DEFAULT_PADDING = getComputedStyle(document.querySelector(':root')).getPropertyValue('--DEFAULT-PADDING')
 const BODY_REF = document.body
 const DIALOG_REF = document.querySelector('dialog#dialogContainer')
-let OK_BUTTON_REF
+const IMG_CONTAINER_REF = document.querySelector('div#imageContainer')
 const REFS = {}
 let tempRefForDialogContainer
 let tempRefForBody

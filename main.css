@@ -22,3 +22,7 @@ div.formTemplateRoot div:last-child {
 div.formTemplateRoot button {
   flex-grow: 1
 }
+
+div#imageContainer {
+  line-height: 0
+}

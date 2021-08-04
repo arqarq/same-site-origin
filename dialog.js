@@ -14,28 +14,37 @@ function dialogToTopRight(reset) {
   DIALOG_REF.style.right = '0'
 }
 
-function showTemplateInBody(templateRef) {
-  if (BODY_REF.contains(tempRefForBody)) {
-    BODY_REF.removeChild(tempRefForBody)
+function showTemplateInBody(templateRef, returnRef) {
+  clearBodyRef()
+  if (returnRef) {
+    return BODY_REF.appendChild(templateRef)
   }
   tempRefForBody = BODY_REF.appendChild(templateRef)
 }
 
 function showTemplateInDialog(templateRef) {
-  if (DIALOG_REF.contains(tempRefForDialogContainer)) {
-    DIALOG_REF.removeChild(tempRefForDialogContainer)
-  }
+  clearDialogRef()
   tempRefForDialogContainer = DIALOG_REF.appendChild(templateRef)
 }
 
-function clearBodyRef() {
-  if (BODY_REF.contains(tempRefForBody)) {
-    BODY_REF.removeChild(tempRefForBody)
+function clearBodyRef(tempRef = tempRefForBody) {
+  if (BODY_REF.contains(tempRef)) {
+    BODY_REF.removeChild(tempRef)
   }
 }
 
-function clearDialogRef() {
-  if (DIALOG_REF.contains(tempRefForDialogContainer)) {
-    DIALOG_REF.removeChild(tempRefForDialogContainer)
+function clearDialogRef(tempRef = tempRefForDialogContainer) {
+  if (DIALOG_REF.contains(tempRef)) {
+    DIALOG_REF.removeChild(tempRef)
+  }
+}
+
+function showTemplateInPlaceRef(templateRef, placeRef) {
+  return placeRef.appendChild(templateRef)
+}
+
+function removeTemplateFromPlaceRef(templateRef, placeRef) {
+  if (placeRef.contains(templateRef)) {
+    placeRef.removeChild(templateRef)
   }
 }

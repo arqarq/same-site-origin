@@ -24,6 +24,7 @@
       <input id="api_key"
              maxlength="32"
              oninput="parseApiKey(event)"
+             onkeydown="onEnter(event)"
              type="text">
     </div>
     <div>
@@ -38,7 +39,7 @@
 </template>
 <template id="loadingTemplate">
   <div>
-    Wczytywanie...
+    LOADING...
   </div>
 </template>
 <template id="errorTemplate">
@@ -48,9 +49,14 @@
 </template>
 <template id="loadedTemplate">
   <div>
-    Przyszła odpowiedź
+    OK
   </div>
 </template>
+<template id="imageTemplate">
+  <img alt=""
+       src="">
+</template>
 <dialog id="dialogContainer"></dialog>
+<div id="imageContainer"></div>
 </body>
 </html>
