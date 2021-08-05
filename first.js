@@ -1,11 +1,8 @@
 'use strict'
 const DEFAULT_PADDING = getComputedStyle(document.querySelector(':root')).getPropertyValue('--DEFAULT-PADDING')
-const BODY_REF = document.body
-const DIALOG_REF = document.querySelector('dialog#dialogContainer')
+const BODY_REF = document.body, REFS = {}, DIALOG_REF = document.querySelector('dialog#dialogContainer')
 const IMG_CONTAINER_REF = document.querySelector('div#imageContainer')
-const REFS = {}
-let tempRefForDialogContainer
-let tempRefForBody
+let tempRefForDialogContainer, tempRefForBody
 
 document.querySelectorAll('template').forEach(it => {
   const temp = REFS['$' + it.id] = it.content.firstElementChild
@@ -15,5 +12,5 @@ document.querySelectorAll('template').forEach(it => {
     }
   })
 })
-tempRefForDialogContainer = DIALOG_REF.appendChild(REFS.startTemplate)
+showTemplateInDialog(REFS.startTemplate)
 openCloseModal(true)

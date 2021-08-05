@@ -2,20 +2,38 @@
   --DEFAULT-PADDING: 8px
 }
 
+body {
+  margin: 0
+}
+
 dialog {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19)
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
+  margin-top: var(--DEFAULT-PADDING)
+}
+
+div.formTemplateRoot input {
+  margin-left: var(--DEFAULT-PADDING)
 }
 
 div.formTemplateRoot input#api_key {
   width: 32ch
 }
 
-div.formTemplateRoot div:first-child {
+div.formTemplateRoot input#tags {
+  width: 100%
+}
+
+div.formTemplateRoot div:first-child,
+div.formTemplateRoot div:nth-child(2) {
   margin-bottom: var(--DEFAULT-PADDING)
 }
 
+div.formTemplateRoot div:nth-child(2),
 div.formTemplateRoot div:last-child {
-  display: flex;
+  display: flex
+}
+
+div.formTemplateRoot div:last-child {
   justify-content: space-around
 }
 
@@ -25,4 +43,8 @@ div.formTemplateRoot button {
 
 div#imageContainer {
   line-height: 0
+}
+
+div.message {
+  margin-left: calc(var(--DEFAULT-PADDING) / 2)
 }

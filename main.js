@@ -1,15 +1,16 @@
 'use strict'
-let to
-let apiKeyOrAddress
-let request
-let okToSend
+let to, request, okToSend, apiKey = null, tags = null
 const imgRefs = []
 
 function start() {
   clearBodyRef()
   showTemplateInDialog(REFS.formTemplate)
   dialogToTopRight(true)
-  document.querySelector('input#api_key').focus()
+  const element = document.querySelector('input#api_key')
+  element.value = apiKey
+  element.focus()
+  document.querySelector('input#tags').value = tags
+  parseApiKey()
   clearTimeout(to)
   request?.abort()
 }
@@ -38,12 +39,11 @@ function openCloseModal(open) {
 function prepareJson() {
   showTemplateInBody(REFS.loadingTemplate)
   to = setTimeout(() => {
-    apiKeyOrAddress = `https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=${apiKeyOrAddress}` +
-      '&format=json&tags=cat,dog&nojsoncallback=1&media=photos&per_page=8'
     request = new XMLHttpRequest()
     request.addEventListener('load', reqListener)
     request.addEventListener('error', () => showTemplateInBody(REFS.errorTemplate))
-    request.open('GET', apiKeyOrAddress)
+    request.open('GET', `https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=${apiKey}` +
+      `&format=json&tags=${tags}&nojsoncallback=1&media=photos&per_page=8`)
     request.send()
     clearTimeout(to)
   }, 2000)
@@ -62,7 +62,7 @@ function reqListener() {
 
 function parseApiKey(ev) {
   const okButtonRef = document.querySelector('button#ok_button')
-  if ((apiKeyOrAddress = ev.target.value).length === 32) {
+  if (ev && ((apiKey = ev.target.value).length === 32) || apiKey?.length === 32) {
     okButtonRef.removeAttribute('disabled')
     okToSend = true
     return
@@ -71,6 +71,10 @@ function parseApiKey(ev) {
     okButtonRef.setAttribute('disabled', '')
     okToSend = false
   }
+}
+
+function parseTags(ev) {
+  tags = ev.target.value
 }
 
 function addImages(parsedJson) {

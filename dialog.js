@@ -2,16 +2,14 @@
 
 function dialogToTopRight(reset) {
   if (reset) {
-    DIALOG_REF.style.removeProperty('margin')
     DIALOG_REF.style.removeProperty('position')
     DIALOG_REF.style.removeProperty('left')
     DIALOG_REF.style.removeProperty('right')
     return
   }
-  DIALOG_REF.style.margin = `0 ${DEFAULT_PADDING} 0 0`
   DIALOG_REF.style.position = 'fixed'
   DIALOG_REF.style.left = 'unset'
-  DIALOG_REF.style.right = '0'
+  DIALOG_REF.style.right = `${DEFAULT_PADDING}`
 }
 
 function showTemplateInBody(templateRef, returnRef) {
