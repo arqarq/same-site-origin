@@ -19,16 +19,19 @@ div.formTemplateRoot input#api_key {
   width: 32ch
 }
 
-div.formTemplateRoot input#tags {
+div.formTemplateRoot input#tags,
+div.formTemplateRoot input#photosCount {
   width: 100%
 }
 
 div.formTemplateRoot div:first-child,
-div.formTemplateRoot div:nth-child(2) {
+div.formTemplateRoot div:nth-child(2),
+div.formTemplateRoot div:nth-child(3) {
   margin-bottom: var(--DEFAULT-PADDING)
 }
 
 div.formTemplateRoot div:nth-child(2),
+div.formTemplateRoot div:nth-child(3),
 div.formTemplateRoot div:last-child {
   display: flex
 }
@@ -42,6 +45,10 @@ div.formTemplateRoot button {
 }
 
 div#imageContainer {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   line-height: 0
 }
 

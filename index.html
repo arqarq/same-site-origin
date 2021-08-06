@@ -33,6 +33,13 @@
                                             type="text">
     </div>
     <div>
+      <label for="photosCount">photos&nbsp;count:</label><input id="photosCount"
+                                                                min="1"
+                                                                oninput="parseCount(event)"
+                                                                onkeydown="onEnter(event)"
+                                                                type="number">
+    </div>
+    <div>
       <button onclick="cancel()"
               type="button">Anuluj</button>
       <button disabled

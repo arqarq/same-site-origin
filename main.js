@@ -1,5 +1,5 @@
 'use strict'
-let to, request, okToSend, apiKey = null, tags = null
+let to, request, okToSend, apiKey = null, tags = null, photosCount = '1'
 const imgRefs = []
 
 function start() {
@@ -10,6 +10,7 @@ function start() {
   element.value = apiKey
   element.focus()
   document.querySelector('input#tags').value = tags
+  document.querySelector('input#photosCount').value = photosCount
   parseApiKey()
   clearTimeout(to)
   request?.abort()
@@ -43,7 +44,7 @@ function prepareJson() {
     request.addEventListener('load', reqListener)
     request.addEventListener('error', () => showTemplateInBody(REFS.errorTemplate))
     request.open('GET', `https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=${apiKey}` +
-      `&format=json&tags=${tags}&nojsoncallback=1&media=photos&per_page=8`)
+      `&format=json&tags=${tags}&nojsoncallback=1&media=photos&per_page=${photosCount}`)
     request.send()
     clearTimeout(to)
   }, 2000)
@@ -75,6 +76,10 @@ function parseApiKey(ev) {
 
 function parseTags(ev) {
   tags = ev.target.value
+}
+
+function parseCount(ev) {
+  photosCount = ev.target.value
 }
 
 function addImages(parsedJson) {
