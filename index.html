@@ -18,7 +18,8 @@
   </div>
 </template>
 <template id="formTemplate">
-  <div class="formTemplateRoot">
+  <div class="formTemplateRoot"
+       onkeydown="onEscape(event)">
     <div>
       <label for="api_key">API key:</label><input id="api_key"
                                                   maxlength="32"

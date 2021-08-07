@@ -1,5 +1,5 @@
 'use strict'
-let to, request, okToSend, apiKey = null, tags = null, photosCount = '1'
+let to, request, okToSend, imgsWereAddedOnce, apiKey = null, tags = null, photosCount = '1'
 const imgRefs = []
 
 function start() {
@@ -19,6 +19,13 @@ function start() {
 function onEnter(ev) {
   if (okToSend && ev.keyCode === 13) {
     sendPressed()
+  }
+}
+
+function onEscape(ev) {
+  if (ev.keyCode === 27) {
+    imgsWereAddedOnce && dialogToTopRight(false)
+    cancel()
   }
 }
 
@@ -55,10 +62,11 @@ function reqListener() {
   if (parsed.stat === 'ok') {
     addImages(parsed)
     showTemplateInBody(REFS.loadedTemplate)
+    imgsWereAddedOnce = true
     return
   }
   showTemplateInBody(REFS.errorTemplate)
-  console.log(parsed.message)
+  console.error(parsed.message)
 }
 
 function parseApiKey(ev) {
