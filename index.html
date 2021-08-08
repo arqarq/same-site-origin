@@ -41,6 +41,20 @@
                                                                 type="number">
     </div>
     <div>
+      <label for="requestKind">preflight:</label><input id="requestKind"
+                                                        name="kind"
+                                                        oninput="parseKind(event)"
+                                                        onkeydown="onEnter(event)"
+                                                        type="radio"
+                                                        value="false"><!--
+  --><label for="requestKindWithCallback">same-site:</label><input id="requestKindWithCallback"
+                                                                   name="kind"
+                                                                   oninput="parseKind(event)"
+                                                                   onkeydown="onEnter(event)"
+                                                                   type="radio"
+                                                                   value="true">
+    </div>
+    <div>
       <button onclick="cancel()"
               type="button">Anuluj</button>
       <button disabled
@@ -64,10 +78,6 @@
   <div class="message">
     OK
   </div>
-</template>
-<template id="imageTemplate">
-  <img alt=""
-       src="">
 </template>
 <dialog id="dialogContainer"></dialog>
 <div id="imageContainer"></div>

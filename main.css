@@ -11,8 +11,14 @@ dialog {
   margin-top: var(--DEFAULT-PADDING)
 }
 
-div.formTemplateRoot input {
-  margin-left: var(--DEFAULT-PADDING)
+dialog#dialogContainer.transparent {
+  transition: opacity 1s;
+  opacity: 0
+}
+
+dialog#dialogContainer.transparent:hover {
+  transition: opacity 0s;
+  opacity: 1
 }
 
 div.formTemplateRoot input#api_key {
@@ -24,9 +30,19 @@ div.formTemplateRoot input#photosCount {
   width: 100%
 }
 
+div.formTemplateRoot label[for=requestKindWithCallback],
+div.formTemplateRoot input:not([type=radio]) {
+  margin-left: var(--DEFAULT-PADDING)
+}
+
+div.formTemplateRoot input[type=radio] {
+  margin: 3px 0 0 3px
+}
+
 div.formTemplateRoot div:first-child,
 div.formTemplateRoot div:nth-child(2),
-div.formTemplateRoot div:nth-child(3) {
+div.formTemplateRoot div:nth-child(3),
+div.formTemplateRoot div:nth-child(4) {
   margin-bottom: var(--DEFAULT-PADDING)
 }
 
@@ -34,6 +50,10 @@ div.formTemplateRoot div:nth-child(2),
 div.formTemplateRoot div:nth-child(3),
 div.formTemplateRoot div:last-child {
   display: flex
+}
+
+div.formTemplateRoot div:nth-child(4) {
+  text-align: center
 }
 
 div.formTemplateRoot div:last-child {

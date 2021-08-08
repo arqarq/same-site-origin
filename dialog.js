@@ -5,18 +5,18 @@ function dialogToTopRight(reset) {
     DIALOG_REF.style.removeProperty('position')
     DIALOG_REF.style.removeProperty('left')
     DIALOG_REF.style.removeProperty('right')
+    DIALOG_REF.classList.remove('transparent')
     return
   }
   DIALOG_REF.style.position = 'fixed'
   DIALOG_REF.style.left = 'unset'
   DIALOG_REF.style.right = `${DEFAULT_PADDING}`
+  DIALOG_REF.classList.add('transparent')
 }
 
 function showTemplateInBody(templateRef, returnRef) {
   clearBodyRef()
-  if (returnRef) {
-    return BODY_REF.appendChild(templateRef)
-  }
+  if (returnRef) return BODY_REF.appendChild(templateRef)
   tempRefForBody = BODY_REF.appendChild(templateRef)
 }
 
@@ -26,15 +26,11 @@ function showTemplateInDialog(templateRef) {
 }
 
 function clearBodyRef(tempRef = tempRefForBody) {
-  if (BODY_REF.contains(tempRef)) {
-    BODY_REF.removeChild(tempRef)
-  }
+  BODY_REF.contains(tempRef) && BODY_REF.removeChild(tempRef)
 }
 
 function clearDialogRef(tempRef = tempRefForDialogContainer) {
-  if (DIALOG_REF.contains(tempRef)) {
-    DIALOG_REF.removeChild(tempRef)
-  }
+  DIALOG_REF.contains(tempRef) && DIALOG_REF.removeChild(tempRef)
 }
 
 function showTemplateInPlaceRef(templateRef, placeRef) {
@@ -42,7 +38,43 @@ function showTemplateInPlaceRef(templateRef, placeRef) {
 }
 
 function removeTemplateFromPlaceRef(templateRef, placeRef) {
-  if (placeRef.contains(templateRef)) {
-    placeRef.removeChild(templateRef)
-  }
+  placeRef.contains(templateRef) && placeRef.removeChild(templateRef)
+}
+
+function openCloseModal(open) {
+  open ? DIALOG_REF.setAttribute('open', '') : DIALOG_REF.removeAttribute('open')
+}
+
+function start() {
+  request?.abort()
+  clearTimeout(to)
+  clearBodyRef()
+  dialogToTopRight(true)
+  showTemplateInDialog(REFS.formTemplate)
+  const element = document.querySelector('input#api_key')
+  element.value = apiKey
+  element.focus()
+  document.querySelector('input#tags').value = tags
+  document.querySelector('input#photosCount').value = photosCount
+  document.querySelector(`input#requestKind${withCallback ? 'WithCallback' : ''}`).checked = true
+  parseApiKey()
+}
+
+function onEnter(ev) {
+  (okToSend && ev.keyCode === 13) && sendPressed()
+}
+
+function onEscape(ev) {
+  (ev.keyCode === 27) && cancel()
+}
+
+function sendPressed() {
+  cancel()
+  withCallback ? prepareJsonWithJsonCallback() : prepareJson()
+}
+
+function cancel() {
+  clearDialogRef()
+  imgsWereAddedOnce && dialogToTopRight(false)
+  showTemplateInDialog(REFS.startTemplate)
 }

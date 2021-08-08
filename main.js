@@ -1,54 +1,12 @@
 'use strict'
-let to, request, okToSend, imgsWereAddedOnce, apiKey = null, tags = null, photosCount = '1'
+let to, request, okToSend, imgsWereAddedOnce, withCallback, apiKey = null, tags = null, photosCount = '1'
 const imgRefs = []
-
-function start() {
-  clearBodyRef()
-  showTemplateInDialog(REFS.formTemplate)
-  dialogToTopRight(true)
-  const element = document.querySelector('input#api_key')
-  element.value = apiKey
-  element.focus()
-  document.querySelector('input#tags').value = tags
-  document.querySelector('input#photosCount').value = photosCount
-  parseApiKey()
-  clearTimeout(to)
-  request?.abort()
-}
-
-function onEnter(ev) {
-  if (okToSend && ev.keyCode === 13) {
-    sendPressed()
-  }
-}
-
-function onEscape(ev) {
-  if (ev.keyCode === 27) {
-    imgsWereAddedOnce && dialogToTopRight(false)
-    cancel()
-  }
-}
-
-function sendPressed() {
-  dialogToTopRight(false)
-  cancel()
-  prepareJson()
-}
-
-function cancel() {
-  clearDialogRef()
-  showTemplateInDialog(REFS.startTemplate)
-}
-
-function openCloseModal(open) {
-  open ? DIALOG_REF.setAttribute('open', '') : DIALOG_REF.removeAttribute('open')
-}
 
 function prepareJson() {
   showTemplateInBody(REFS.loadingTemplate)
   to = setTimeout(() => {
     request = new XMLHttpRequest()
-    request.addEventListener('load', reqListener)
+    request.addEventListener('load', addImagesOrShowErrorMessage) // to samo: (data) => addImagesOrShowErrorMessage.bind(data.target)()
     request.addEventListener('error', () => showTemplateInBody(REFS.errorTemplate))
     request.open('GET', `https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=${apiKey}` +
       `&format=json&tags=${tags}&nojsoncallback=1&media=photos&per_page=${photosCount}`)
@@ -57,16 +15,23 @@ function prepareJson() {
   }, 2000)
 }
 
-function reqListener() {
-  const parsed = JSON.parse(this.responseText)
-  if (parsed.stat === 'ok') {
-    addImages(parsed)
+function prepareJsonWithJsonCallback() {
+  const s = document.createElement('script')
+  s.src = `https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=${apiKey}` +
+    `&format=json&tags=${tags}&jsoncallback=${addImagesOrShowErrorMessage.name}&media=photos&per_page=${photosCount}`
+  document.head.removeChild(document.head.appendChild(s))
+}
+
+function addImagesOrShowErrorMessage(object) {
+  if ((this?.responseText ? (object = JSON.parse(this.responseText)) : object).stat === 'ok') {
+    addImages(object)
     showTemplateInBody(REFS.loadedTemplate)
     imgsWereAddedOnce = true
+    cancel()
     return
   }
   showTemplateInBody(REFS.errorTemplate)
-  console.error(parsed.message)
+  console.error(object.message)
 }
 
 function parseApiKey(ev) {
@@ -90,15 +55,24 @@ function parseCount(ev) {
   photosCount = ev.target.value
 }
 
+function parseKind(ev) {
+  withCallback = ev.target.value
+}
+
 function addImages(parsedJson) {
   const imgCount = imgRefs.length
   for (let i = 0; i < imgCount; i++) {
     removeTemplateFromPlaceRef(...imgRefs.splice(0, 1), IMG_CONTAINER_REF)
   }
   parsedJson.photos.photo.forEach(it => {
-    const cloneFromImageTemplate = REFS.imageTemplate
-    cloneFromImageTemplate.setAttribute('src', `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jpg`)
-    cloneFromImageTemplate.setAttribute('alt', it.title)
-    imgRefs.push(showTemplateInPlaceRef(cloneFromImageTemplate, IMG_CONTAINER_REF))
+    const imgElement = document.createElement('img')
+    imgElement.setAttribute('src', `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jpg`)
+    imgElement.setAttribute('alt', it.title)
+    imgElement.addEventListener('load', () => {
+      console.log(1, imgElement.width, imgElement.height)
+      imgElement.style.width = '20px'
+      console.log(2, imgElement.width, imgElement.height)
+    })
+    imgRefs.push(showTemplateInPlaceRef(imgElement, IMG_CONTAINER_REF))
   })
 }
