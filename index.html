@@ -9,6 +9,7 @@
           src="first.js"></script>
   <script src="main.js"></script>
   <script src="dialog.js"></script>
+  <script src="bsp.js"></script>
 </head>
 <body>
 <template id="startTemplate">
@@ -21,38 +22,43 @@
   <div class="formTemplateRoot"
        onkeydown="onEscape(event)">
     <div>
-      <label for="api_key">API key:</label><input id="api_key"
-                                                  maxlength="32"
-                                                  oninput="parseApiKey(event)"
-                                                  onkeydown="onEnter(event)"
-                                                  type="text">
+      <label for="api_key">API key:</label><!--
+   --><input id="api_key"
+             maxlength="32"
+             oninput="parseApiKey(event)"
+             onkeydown="onEnter(event)"
+             type="text">
     </div>
     <div>
-      <label for="tags">tags:</label><input id="tags"
-                                            oninput="parseTags(event)"
-                                            onkeydown="onEnter(event)"
-                                            type="text">
+      <label for="tags">tags:</label><!--
+   --><input id="tags"
+             oninput="parseTags(event)"
+             onkeydown="onEnter(event)"
+             type="text">
     </div>
     <div>
-      <label for="photosCount">photos&nbsp;count:</label><input id="photosCount"
-                                                                min="1"
-                                                                oninput="parseCount(event)"
-                                                                onkeydown="onEnter(event)"
-                                                                type="number">
+      <label for="photosCount">photos&nbsp;count:</label><!--
+   --><input id="photosCount"
+             min="1"
+             oninput="parseCount(event)"
+             onkeydown="onEnter(event)"
+             type="number">
     </div>
     <div>
-      <label for="requestKind">preflight:</label><input id="requestKind"
-                                                        name="kind"
-                                                        oninput="parseKind(event)"
-                                                        onkeydown="onEnter(event)"
-                                                        type="radio"
-                                                        value="false"><!--
-  --><label for="requestKindWithCallback">same-site:</label><input id="requestKindWithCallback"
-                                                                   name="kind"
-                                                                   oninput="parseKind(event)"
-                                                                   onkeydown="onEnter(event)"
-                                                                   type="radio"
-                                                                   value="true">
+      <label for="requestKind">preflight:</label><!--
+   --><input id="requestKind"
+             name="kind"
+             oninput="parseKind(event)"
+             onkeydown="onEnter(event)"
+             type="radio"
+             value="false"><!--
+  --><label for="requestKindWithCallback">same-site:</label><!--
+  --><input id="requestKindWithCallback"
+            name="kind"
+            oninput="parseKind(event)"
+            onkeydown="onEnter(event)"
+            type="radio"
+            value="true">
     </div>
     <div>
       <button onclick="cancel()"

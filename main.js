@@ -69,10 +69,9 @@ function addImages(parsedJson) {
     imgElement.setAttribute('src', `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jpg`)
     imgElement.setAttribute('alt', it.title)
     imgElement.addEventListener('load', () => {
-      console.log(1, imgElement.width, imgElement.height)
-      imgElement.style.width = '20px'
+      processPosition(imgElement) && imgRefs.push(showTemplateInPlaceRef(imgElement, IMG_CONTAINER_REF))
       console.log(2, imgElement.width, imgElement.height)
     })
-    imgRefs.push(showTemplateInPlaceRef(imgElement, IMG_CONTAINER_REF))
   })
+  i = 50
 }
