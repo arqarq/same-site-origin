@@ -1,6 +1,6 @@
 'use strict'
 let to, request, okToSend, imgsWereAddedOnce, withCallback, apiKey = null, tags = null, photosCount = '1'
-const imgRefs = []
+const imgRefs = [], imgRefsBckp = []
 
 function prepareJson() {
   showTemplateInBody(REFS.loadingTemplate)
@@ -60,16 +60,24 @@ function parseKind(ev) {
 }
 
 function addImages(parsedJson) {
+  let temp
+
   const imgCount = imgRefs.length
   for (let i = 0; i < imgCount; i++) {
     removeTemplateFromPlaceRef(...imgRefs.splice(0, 1), IMG_CONTAINER_REF)
   }
+  imgRefsBckp.splice(0)
   parsedJson.photos.photo.forEach(it => {
+
     const imgElement = document.createElement('img')
     imgElement.setAttribute('src', `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jpg`)
     imgElement.setAttribute('alt', it.title)
     imgElement.addEventListener('load', () => {
-      processPosition(imgElement) && imgRefs.push(showTemplateInPlaceRef(imgElement, IMG_CONTAINER_REF))
+      temp = imgElement.cloneNode(true)
+      if (processPosition(imgElement)) {
+        imgRefs.push(showTemplateInPlaceRef(imgElement, IMG_CONTAINER_REF))
+        imgRefsBckp.push(temp)
+      }
       console.log(2, imgElement.width, imgElement.height)
     })
   })

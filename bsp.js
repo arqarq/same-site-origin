@@ -1,15 +1,14 @@
 'use strict'
 
-const bspPool = [{xs: 0, ys: 0, W: window.innerWidth, H: window.innerHeight}]
+const bspPool = [{xs: 0, ys: 0, W: window.innerWidth - 1, H: window.innerHeight - 1}]
 let i = 50
-console.log(bspPool)
 
 function processPosition(imgRef) {
   console.log(1, imgRef.width, imgRef.height)
-  imgRef.width = 40
+  imgRef.width = 200
   imgRef.style.position = 'absolute'
   imgRef.style.top = i + 'px'
   imgRef.style.left = i + 'px'
   i += 50
-  return imgRef
+  return true
 }
