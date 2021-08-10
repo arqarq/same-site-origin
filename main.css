@@ -73,5 +73,10 @@ div#imageContainer {
 }
 
 div.message {
-  margin-left: calc(var(--DEFAULT-PADDING) / 2)
+  height: 16px;
+  bottom: calc(var(--DEFAULT-PADDING) / 2);
+  left: calc(var(--DEFAULT-PADDING) / 2);
+  position: fixed;
+  font-size: 16px;
+  font-family: "Times New Roman", Times, serif
 }
