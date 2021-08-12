@@ -67,8 +67,8 @@ function addImages(parsedJson) {
     removeTemplateFromPlaceRef(...imgRefs.splice(0, 1), IMG_CONTAINER_REF)
   }
   imgRefsBckp.splice(0)
+  bspPool = [{xs: 0, ys: 0, W: window.innerWidth - 1, H: window.innerHeight - 1}]
   parsedJson.photos.photo.forEach(it => {
-
     const imgElement = document.createElement('img')
     imgElement.setAttribute('src', `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jpg`)
     imgElement.setAttribute('alt', it.title)
