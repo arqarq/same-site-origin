@@ -16,17 +16,19 @@ function processPosition(imgRef) {
 }
 
 function bsp(imgRef) {
-  let indexOfMaxEl
-  let temp = 0
+  let indexOfElWithMaxW, temp = 0, p1, p2
 
   bspPool.forEach((it, idx) => {
     if (it.W > temp) {
       temp = it.W
-      indexOfMaxEl = idx
+      indexOfElWithMaxW = idx
     }
   })
-  if (typeof indexOfMaxEl === 'number') {
-    const area = bspPool.splice(indexOfMaxEl, 1)[0]
+  if (typeof indexOfElWithMaxW === 'number') {
+    p1 = true
+    p2 = true
+
+    const area = bspPool.splice(indexOfElWithMaxW, 1)[0]
     console.log('area:', area)
     return true
   }
