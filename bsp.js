@@ -1,6 +1,7 @@
 'use strict'
 
 let bspPool, i = 50
+const P = []
 
 function processPosition(imgRef) {
   const wasEmptyAreaInArray = bsp(imgRef)
@@ -15,8 +16,8 @@ function processPosition(imgRef) {
   return wasEmptyAreaInArray
 }
 
-function bsp(imgRef) {
-  let indexOfElWithMaxW, temp = 0, p1, p2
+function bsp(it) {
+  let indexOfElWithMaxW, temp = 0
 
   bspPool.forEach((it, idx) => {
     if (it.W > temp) {
@@ -25,12 +26,21 @@ function bsp(imgRef) {
     }
   })
   if (typeof indexOfElWithMaxW === 'number') {
-    p1 = true
-    p2 = true
-
     const area = bspPool.splice(indexOfElWithMaxW, 1)[0]
+    P[1] = true
+    P[2] = true
     console.log('area:', area)
+    if (compareSide(area.W, it.width, 1)) {
+
+    }
     return true
   }
   return false
+}
+
+function compareSide(left, right, blockAreaCalc) {
+  if (left === right) {
+    P[blockAreaCalc] = false
+  }
+  return left >= right
 }
