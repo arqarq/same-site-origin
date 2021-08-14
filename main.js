@@ -67,19 +67,18 @@ function addImages(parsedJson) {
     removeTemplateFromPlaceRef(...imgRefs.splice(0, 1), IMG_CONTAINER_REF)
   }
   imgRefsBckp.splice(0)
-  bspPool = [{xs: 0, ys: 0, W: window.innerWidth - 1, H: window.innerHeight - 1}]
+  bspPool.splice(0, bspPool.length, new Area(0, 0, window.innerWidth, window.innerHeight))
   parsedJson.photos.photo.forEach(it => {
     const imgElement = document.createElement('img')
+    imgElement.style.position = 'absolute'
     imgElement.setAttribute('src', `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jpg`)
     imgElement.setAttribute('alt', it.title)
     imgElement.addEventListener('load', () => {
       temp = imgElement.cloneNode(true)
-      if (processPosition(imgElement)) {
+      if (bsp(imgElement)) {
         imgRefs.push(showTemplateInPlaceRef(imgElement, IMG_CONTAINER_REF))
         imgRefsBckp.push(temp)
       }
-      console.log(2, imgElement.width, imgElement.height)
     })
   })
-  i = 50
 }

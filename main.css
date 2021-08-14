@@ -8,7 +8,8 @@ body {
 
 dialog {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
-  margin-top: var(--DEFAULT-PADDING)
+  margin-top: var(--DEFAULT-PADDING);
+  z-index: 1
 }
 
 dialog#dialogContainer.transparent {
@@ -65,11 +66,14 @@ div.formTemplateRoot button {
 }
 
 div#imageContainer {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  line-height: 0
+  /*align-items: center;*/
+  /*display: flex;*/
+  /*flex-wrap: wrap;*/
+  /*justify-content: center;*/
+  line-height: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%
 }
 
 div.message {
