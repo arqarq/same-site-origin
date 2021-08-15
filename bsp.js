@@ -1,6 +1,6 @@
 'use strict'
 
-const bspPool = [], P = []
+const bspPool = [], P = [], SIZE_THRESHOLD = 100
 
 class Area {
   constructor(xs, ys, W, H) {
@@ -23,21 +23,24 @@ function bsp(it) {
   if ('number' === typeof indexOfElWithMaxW) {
     const area = bspPool.splice(indexOfElWithMaxW, 1)[0]
     P[1] = P[2] = true
-    if (compareGE(area.W, it.width, 1)) {
-      if (!compareLE(it.height, area.H, 2)) {
-        it.width = Math.ceil(it.width * area.H / it.height)
-        it.height = area.H
-        area.W !== it.width && (P[1] = true)
+    // const W = it.width >= (temp = (area.W > SIZE_THRESHOLD) ? area.W - SIZE_THRESHOLD : area.W) ? temp : area.W
+    const W = area.W <= SIZE_THRESHOLD ? area.W : area.W
+    if (W >= it.width) {
+      W === it.width && (P[1] = false)
+      if (it.height <= area.H) {
+        it.height === area.H && (P[2] = false)
+      } else {
+        backToCutWidth(area, it, W)
       }
     } else {
-      const tempHeight = Math.ceil(it.height * area.W / it.width)
-      if (compareGE(area.H, tempHeight, 2)) {
-        it.width = area.W
+      const tempHeight = Math.floor(it.height * W / it.width)
+      if (area.H >= tempHeight) {
+        P[1] = false
+        area.H === tempHeight && (P[2] = false)
+        it.width = W
         it.height = tempHeight
       } else {
-        it.width = Math.ceil(it.width * area.H / it.height)
-        it.height = area.H
-        area.W !== it.width && (P[1] = true)
+        backToCutWidth(area, it, W)
       }
     }
     it.style.left = area.xs + 'px'
@@ -48,18 +51,15 @@ function bsp(it) {
   return false
 }
 
-function compareGE(left, right, blockAreaCalc) {
-  if (left <= right) {
-    P[blockAreaCalc] = false
-  }
-  return left >= right
-}
-
-function compareLE(left, right, blockAreaCalc) {
-  if (left >= right) {
-    P[blockAreaCalc] = false
-  }
-  return left <= right
+function backToCutWidth(area, image, W) {
+  P[2] = false
+  P[1] = true
+  const number = image.width * area.H / image.height
+  const number2 = image.height
+  image.width = Math.floor(number)
+  image.height = area.H
+  console.log(W !== image.width, W, image.width, number, ' -> ', image.width, number2, ' -> ', image.height)
+  // area.W !== image.width && (P[1] = true)
 }
 
 function divideSpace(area, image) {

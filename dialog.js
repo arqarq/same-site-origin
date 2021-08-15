@@ -1,4 +1,5 @@
 'use strict'
+let to
 
 function dialogToTopRight(reset) {
   if (reset) {
@@ -69,8 +70,12 @@ function onEscape(ev) {
 }
 
 function sendPressed() {
+  showTemplateInBody(REFS.loadingTemplate)
   cancel()
-  withCallback ? prepareJsonWithJsonCallback() : prepareJson()
+  to = setTimeout(() => {
+    withCallback ? prepareJsonWithJsonCallback() : prepareJson()
+    clearTimeout(to)
+  }, 500)
 }
 
 function cancel() {

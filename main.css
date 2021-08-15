@@ -70,7 +70,7 @@ div#imageContainer {
   /*display: flex;*/
   /*flex-wrap: wrap;*/
   /*justify-content: center;*/
-  line-height: 0;
+  /*line-height: 0;*/
   position: absolute;
   width: 100%;
   height: 100%
