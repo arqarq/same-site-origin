@@ -24,7 +24,7 @@ function bsp(it) {
     const area = bspPool.splice(indexOfElWithMaxW, 1)[0]
     P[1] = P[2] = true
     // const W = it.width >= (temp = (area.W > SIZE_THRESHOLD) ? area.W - SIZE_THRESHOLD : area.W) ? temp : area.W
-    const W = area.W <= SIZE_THRESHOLD ? area.W : area.W
+    const W = area.W - it.width < SIZE_THRESHOLD + 1 ? area.W : area.W
     if (W >= it.width) {
       W === it.width && (P[1] = false)
       if (it.height <= area.H) {
