@@ -14,6 +14,9 @@ function bsp(it) {
     const area = bspPool.splice(indexOfElWithMaxW, 1)[0]
     P[1] = P[2] = true
     if (area.W >= it.width) {
+      if (area.W !== it.width && area.W - it.width < SIZE_THRESHOLD) {
+        zoomSlightly(it, area.W) // TODO dla height też?
+      }
       if (it.height <= area.H) {
         it.height === area.H && (P[2] = false)
       } else {
@@ -45,7 +48,7 @@ function backToCutWidth(image, H) {
 }
 
 function zoomSlightly(image, W) {
-  image.height = Math.ceil(image.height * W / image.weight)
+  image.height = Math.ceil(image.height * W / image.width)
   image.width = W
 }
 
