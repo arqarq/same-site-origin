@@ -12,7 +12,7 @@ function prepareJson() {
 }
 
 function prepareJsonWithJsonCallback() {
-  const s = document.createElement('script') // TODO czy callback można przerwać?
+  const s = document.createElement('script') // TODO czy zapytanie z callbackiem można przerwać?
   s.src = `https://api.flickr.com/services/rest?method=flickr.photos.search&api_key=${apiKey}` +
     `&format=json&tags=${tags}&jsoncallback=${addImagesOrShowErrorMessage.name}&media=photos&per_page=${photosCount}`
   document.head.removeChild(document.head.appendChild(s))

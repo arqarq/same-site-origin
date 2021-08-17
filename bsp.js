@@ -1,15 +1,5 @@
 'use strict'
-
-const bspPool = [], P = [], SIZE_THRESHOLD = 100
-
-class Area {
-  constructor(xs, ys, W, H) {
-    this.xs = xs
-    this.ys = ys
-    this.W = W
-    this.H = H
-  }
-}
+const bspPool = [], P = [], SIZE_THRESHOLD = 10
 
 function bsp(it) {
   let indexOfElWithMaxW, temp = -Infinity
@@ -20,32 +10,25 @@ function bsp(it) {
       indexOfElWithMaxW = idx
     }
   })
-  // const reduce = bspPool.reduce(([v, index], curr, idx) => [{W: Math.max(v.W, curr.W)}, v.W < curr.W ? idx : index], [{W: -Infinity}, null])
-  // console.log(reduce[0].W, reduce[1])
-  // console.log(temp, indexOfElWithMaxW, bspPool)
   if ('number' === typeof indexOfElWithMaxW) {
     const area = bspPool.splice(indexOfElWithMaxW, 1)[0]
     P[1] = P[2] = true
-    // const W = it.width >= (temp = (area.W > SIZE_THRESHOLD) ? area.W - SIZE_THRESHOLD : area.W) ? temp : area.W
-    const W = area.W - it.width <= SIZE_THRESHOLD && it.width > SIZE_THRESHOLD ? area.W - SIZE_THRESHOLD : area.W
-    if (W >= it.width) {
-      W === it.width && (P[1] = false)
-      if (it.height <= (temp = area.H - SIZE_THRESHOLD)) {
-        // it.height === area.H && (P[2] = false)
+    if (area.W >= it.width) {
+      if (it.height <= area.H) {
+        it.height === area.H && (P[2] = false)
       } else {
-        backToCutWidth(area, it, W, temp)
+        backToCutWidth(it, area.H)
       }
+      area.W === it.width && (P[1] = false)
     } else {
-      const tempHeight = Math.floor(it.height * W / it.width)
-      // if (area.H >= (temp = tempHeight + SIZE_THRESHOLD)) {
-      if (tempHeight <= (temp = area.H - SIZE_THRESHOLD)) {
-        P[1] = false
-        // area.H === tempHeight && (P[2] = false)
-        it.width = W
-        it.height = tempHeight
+      const tempHeight = Math.ceil(it.height * area.W / it.width)
+      if (tempHeight <= area.H) {
+        (it.height = tempHeight) === area.H && (P[2] = false)
+        it.width = area.W
       } else {
-        backToCutWidth(area, it, W, temp)
+        backToCutWidth(it, area.H)
       }
+      area.W === it.width && (P[1] = false)
     }
     it.style.left = area.xs + 'px'
     it.style.top = area.ys + 'px'
@@ -55,27 +38,26 @@ function bsp(it) {
   return false
 }
 
-function backToCutWidth(area, image, W, H) {
+function backToCutWidth(image, H) {
   P[2] = false
-  P[1] = true
-  const number = image.width * H / image.height
-  const number2 = image.height
-  image.width = Math.floor(number)
+  image.width = Math.ceil(image.width * H / image.height)
   image.height = H
-  // console.log(W !== image.width, W, image.width, number, ' -> ', image.width, number2, ' -> ', image.height)
-  // area.W !== image.width && (P[1] = true)
+}
+
+function zoomSlightly(image, W) {
+  image.height = Math.ceil(image.height * W / image.weight)
+  image.width = W
 }
 
 function divideSpace(area, image) {
-  if (P[2]) {
-    console.log(P[2], image.width)
-  }
-  P[1] && bspPool.push(new Area(area.xs + image.width, area.ys, area.W - image.width, area.H)) // right
-  if (P[1] && area.W - image.width === 0) {
-    console.log('area.W - image.width (', area.W, image.width, ')', area.H, area, image)
-  }
-  P[2] && bspPool.push(new Area(area.xs, area.ys + image.height, image.width, area.H - image.height)) // left below
-  if (P[2] && area.H - image.height === 0) {
-    console.log(image.width, 'area.H - image.height (', area.H, image.height, ')', area, image)
-  }
+  const log = []
+  let temp
+
+  area.H === 0 && log.push('area.H === 0')
+  image.width === 0 && log.push('image.width === 0');
+  (temp = area.W - image.width) === 0 && P[1] && log.push(`(P[1]) area.W - image.width === 0 (${area.W} - ${image.width})`)
+  P[1] && bspPool.push(new Area(area.xs + image.width, area.ys, temp, area.H)); // right
+  (temp = area.H - image.height) === 0 && P[2] && log.push(`(P[2]): area.H - image.height === 0 (${area.H} - ${image.height})`)
+  P[2] && bspPool.push(new Area(area.xs, area.ys + image.height, image.width, temp)) // left below
+  log.length && console.log(`P[1]: ${P[1]}, P[2]: ${P[2]},`, log.join(', '))
 }

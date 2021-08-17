@@ -31,9 +31,12 @@ div.formTemplateRoot input#photosCount {
   width: 100%
 }
 
-div.formTemplateRoot label[for=requestKindWithCallback],
 div.formTemplateRoot input:not([type=radio]) {
   margin-left: var(--DEFAULT-PADDING)
+}
+
+div.formTemplateRoot label[for=requestKindWithCallback] {
+  margin-left: calc(2 * var(--DEFAULT-PADDING))
 }
 
 div.formTemplateRoot input[type=radio] {
