@@ -21,7 +21,6 @@ function prepareJsonWithJsonCallback() {
 function addImagesOrShowErrorMessage(object) {
   if ((this?.responseText ? (object = JSON.parse(this.responseText)) : object).stat === 'ok') {
     addImages(object)
-    showTemplateInBody(REFS.loadedTemplate)
     imgsWereAddedOnce = true
     cancel()
     return
@@ -30,60 +29,53 @@ function addImagesOrShowErrorMessage(object) {
   console.error(object.message)
 }
 
-function parseApiKey(ev) {
-  const okButtonRef = document.querySelector('button#ok_button')
-  if (ev && ((apiKey = ev.target.value).length === 32) || apiKey?.length === 32) {
-    okButtonRef.removeAttribute('disabled')
-    okToSend = true
-    return
-  }
-  if (!okButtonRef.hasAttribute('disabled')) {
-    okButtonRef.setAttribute('disabled', '')
-    okToSend = false
-  }
-}
-
-function parseTags(ev) {
-  tags = ev.target.value
-}
-
-function parseCount(ev) {
-  photosCount = ev.target.value
-}
-
-function parseKind(ev) {
-  withCallback = ev.target.value
-}
-
 function addImages(parsedJson) {
-  let temp, c = 0
+  removeImgs()
+  initBspPool()
+  const promises = parsedJson.photos.photo.map((it, idx, arr) => new Promise((resolve, reject) =>
+    createImg(it, idx, arr.length, resolve, reject)))
+  Promise.allSettled(promises).then(data => {
+    const rejected = data.filter(it => 'rejected' === it.status)
+    const fulfilled = data.find(it => 'fulfilled' === it.status)
+    console.log('liczba zapytań:', `${data.length}, max:`, fulfilled ? fulfilled.value.l : '-')
+    if (!rejected.length) {
+      showMessage(REFS.loadedTemplate)
+      return
+    }
+    showMessage(REFS.errorTemplate)
+    rejected.forEach(it => console.log(`nie pobrano obrazka ${it.reason.idx + 1} z ${it.reason.l}:`, it.reason.errEvType))
+  })
+}
 
+function createImg(it, idx, l, resolve, reject) {
+  let temp
+
+  const imgElement = document.createElement('img')
+  imgElement.style.position = 'absolute'
+  imgElement.setAttribute('alt', it.title)
+  imgElement.setAttribute('src',
+    `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jp${idx === 100 || idx === 150 ? '' : 'g'}`)
+  imgElement.addEventListener('load', () => {
+    temp = imgElement.cloneNode(true)
+    if (bsp(imgElement)) {
+      imgRefs.push(showTemplateInPlaceRef(imgElement, IMG_CONTAINER_REF))
+      imgRefsBckp.push(temp)
+      resolve({idx, l})
+      return
+    }
+    reject({idx, l, errEvType: 'not needed'})
+  })
+  imgElement.addEventListener('error', errEv => reject({idx, l, errEvType: errEv.type}))
+}
+
+function removeImgs() {
   const imgCount = imgRefs.length
   for (let i = 0; i < imgCount; i++) {
     removeTemplateFromPlaceRef(...imgRefs.splice(0, 1), IMG_CONTAINER_REF)
   }
   imgRefsBckp.splice(0)
+}
+
+function initBspPool() {
   bspPool.splice(0, bspPool.length, new Area(0, 0, window.innerWidth, window.innerHeight))
-  const promises = parsedJson.photos.photo.map((it, idx, arr) => {
-    const imgElement = document.createElement('img')
-    imgElement.style.position = 'absolute'
-    imgElement.setAttribute('src', `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jpg`)
-    imgElement.setAttribute('alt', it.title)
-    return new Promise((resolve, reject) => {
-      imgElement.addEventListener('load', () => {
-        temp = imgElement.cloneNode(true)
-        if (bsp(imgElement)) {
-          imgRefs.push(showTemplateInPlaceRef(imgElement, IMG_CONTAINER_REF))
-          imgRefsBckp.push(temp)
-        }
-        resolve({idx, l: arr.length})
-      })
-      imgElement.addEventListener('error', errEv => {
-        reject({idx, l: arr.length, errEv})
-      })
-    })
-  })
-  promises.forEach(it => it.then(data => console.log(`${++c}.) indeks obrazka: ${data.idx + 1}/${data.l}`))
-    .catch(data => console.log(`${++c}.) nie udało się pobrać obrazka ${data.idx + 1} z ${data.l}:`, data.errEv.type)))
-  Promise.all(promises).then(() => console.log('wszystko')).catch(() => console.log('jest błąd'))
 }

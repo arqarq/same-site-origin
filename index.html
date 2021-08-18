@@ -75,7 +75,7 @@
   </div>
 </template>
 <template id="loadingTemplate">
-  <div class="message">
+  <div class="message red">
     LOADING...
   </div>
 </template>
@@ -89,7 +89,9 @@
     OK
   </div>
 </template>
-<dialog id="dialogContainer"></dialog>
+<dialog id="dialogContainer"
+        onmouseleave="showError()"
+        onmouseover="showError(true)"></dialog>
 <div id="imageContainer"></div>
 </body>
 </html>

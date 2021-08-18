@@ -49,7 +49,7 @@ function openCloseModal(open) {
 function start() {
   request?.abort()
   clearTimeout(to)
-  clearBodyRef()
+  showError()
   dialogToTopRight(true)
   showTemplateInDialog(REFS.formTemplate)
   const element = document.querySelector('input#api_key')
@@ -62,24 +62,50 @@ function start() {
 }
 
 function onEnter(ev) {
-  (okToSend && ev.keyCode === 13) && sendPressed()
+  okToSend && ev.keyCode === 13 && sendPressed()
 }
 
 function onEscape(ev) {
-  (ev.keyCode === 27) && cancel()
+  ev.keyCode === 27 && cancel()
 }
 
 function sendPressed() {
   showTemplateInBody(REFS.loadingTemplate)
-  cancel()
+  cancel(true)
   to = setTimeout(() => {
     withCallback ? prepareJsonWithJsonCallback() : prepareJson()
     clearTimeout(to)
   }, 500)
 }
 
-function cancel() {
+function cancel(withShowErrorPermanently) {
   clearDialogRef()
   imgsWereAddedOnce && dialogToTopRight(false)
   showTemplateInDialog(REFS.startTemplate)
+  withShowErrorPermanently ? showError(true) : showError()
+}
+
+function parseTags(ev) {
+  tags = ev.target.value
+}
+
+function parseCount(ev) {
+  photosCount = ev.target.value
+}
+
+function parseKind(ev) {
+  withCallback = ev.target.value
+}
+
+function parseApiKey(ev) {
+  const okButtonRef = document.querySelector('button#ok_button')
+  if (ev && (apiKey = ev.target.value).length === 32 || apiKey?.length === 32) {
+    okButtonRef.removeAttribute('disabled')
+    okToSend = true
+    return
+  }
+  if (!okButtonRef.hasAttribute('disabled')) {
+    okButtonRef.setAttribute('disabled', '')
+    okToSend = false
+  }
 }

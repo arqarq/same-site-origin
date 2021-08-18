@@ -12,12 +12,12 @@ dialog {
   z-index: 1
 }
 
-dialog#dialogContainer.transparent {
+.transparent {
   transition: opacity 1s;
   opacity: 0
 }
 
-dialog#dialogContainer.transparent:hover {
+.transparent:hover {
   transition: opacity 0s;
   opacity: 1
 }
@@ -84,6 +84,12 @@ div.message {
   bottom: calc(var(--DEFAULT-PADDING) / 2);
   left: calc(var(--DEFAULT-PADDING) / 2);
   position: fixed;
+  color: greenyellow;
   font-size: 16px;
-  font-family: "Times New Roman", Times, serif
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold
+}
+
+div.red {
+  color: darkred
 }
