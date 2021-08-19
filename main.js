@@ -29,7 +29,7 @@ function addImagesOrShowErrorMessage(object) {
   console.error(object.message)
 }
 
-function addImages(parsedJson) {
+function addImages2(parsedJson) {
   removeImgs()
   initBspPool()
   const promises = parsedJson.photos.photo.map((it, idx, arr) => new Promise((resolve, reject) =>
@@ -47,25 +47,58 @@ function addImages(parsedJson) {
   })
 }
 
-function createImg(it, idx, l, resolve, reject) {
+function addImages(parsedJson) {
+  removeImgs()
+  initBspPool()
+  parsedJson.photos.photo.reduce((previousValue, currentValue, currentIndex) => previousValue.then(data => {
+    if ('end' === data.errEvType) {
+      return new Promise(resolve => resolve(data))
+    }
+    return newPromise(currentValue, currentIndex, data.errCnt)
+  }, data => {
+    errorToConsole(data)
+    return newPromise(currentValue, currentIndex, data.errCnt)
+  }), new Promise(resolve => resolve({errCnt: 0})))
+    .catch(data => {
+      errorToConsole(data)
+      return new Promise((resolve, reject) => reject(data))
+    })
+    .then(summaryToConsole, summaryToConsole)
+}
+
+function errorToConsole(data) {
+  console.log(`błąd typu '${data.errEvType}' w zapytaniu: ${data.idx + 1}/${photosCount}`)
+}
+
+function summaryToConsole(data) {
+  console.log(`zapytań: ${data.idx + 1}/${photosCount}, w tym z błędem: ${data.errCnt}`)
+}
+
+function newPromise(currentValue, currentIndex, errCnt) {
+  return new Promise((resolve, reject) => createImg(currentValue, currentIndex, resolve, reject, errCnt))
+}
+
+function createImg(it, idx, resolve, reject, errCnt) {
+  if (!bspPool.length) {
+    resolve({idx, errCnt, errEvType: 'end'})
+  }
+
   let temp
 
   const imgElement = document.createElement('img')
   imgElement.style.position = 'absolute'
   imgElement.setAttribute('alt', it.title)
   imgElement.setAttribute('src',
-    `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jp${idx === 100 || idx === 150 ? '' : 'g'}`)
+    `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jp${idx === 4 || idx === 9 ? '' : 'g'}`)
   imgElement.addEventListener('load', () => {
     temp = imgElement.cloneNode(true)
     if (bsp(imgElement)) {
       imgRefs.push(showTemplateInPlaceRef(imgElement, IMG_CONTAINER_REF))
       imgRefsBckp.push(temp)
-      resolve({idx, l})
-      return
+      resolve({idx, errCnt})
     }
-    reject({idx, l, errEvType: 'not needed'})
   })
-  imgElement.addEventListener('error', errEv => reject({idx, l, errEvType: errEv.type}))
+  imgElement.addEventListener('error', errEv => reject({idx, errCnt: ++errCnt, errEvType: errEv.type}))
 }
 
 function removeImgs() {
