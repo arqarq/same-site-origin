@@ -54,16 +54,23 @@ function addImages(parsedJson) {
     if ('end' === data.errEvType) {
       return new Promise(resolve => resolve(data))
     }
-    return newPromise(currentValue, currentIndex, data.errCnt)
+    return new Promise((resolve, reject) => createImg(currentValue, currentIndex, resolve, reject, data.errCnt))
   }, data => {
     errorToConsole(data)
-    return newPromise(currentValue, currentIndex, data.errCnt)
+    return new Promise((resolve, reject) => createImg(currentValue, currentIndex, resolve, reject, data.errCnt))
   }), new Promise(resolve => resolve({errCnt: 0})))
     .catch(data => {
       errorToConsole(data)
-      return new Promise((resolve, reject) => reject(data))
+      return new Promise(resolve => resolve(data))
     })
-    .then(summaryToConsole, summaryToConsole)
+    .then(data => {
+      summaryToConsole(data)
+      if (data.errCnt) {
+        showMessage(REFS.errorTemplate)
+        return
+      }
+      showMessage(REFS.loadedTemplate)
+    })
 }
 
 function errorToConsole(data) {
@@ -74,29 +81,23 @@ function summaryToConsole(data) {
   console.log(`zapytań: ${data.idx + 1}/${photosCount}, w tym z błędem: ${data.errCnt}`)
 }
 
-function newPromise(currentValue, currentIndex, errCnt) {
-  return new Promise((resolve, reject) => createImg(currentValue, currentIndex, resolve, reject, errCnt))
-}
-
 function createImg(it, idx, resolve, reject, errCnt) {
-  if (!bspPool.length) {
-    resolve({idx, errCnt, errEvType: 'end'})
-  }
-
   let temp
 
+  if (undefined === (temp = selectArea(it))) {
+    resolve({idx, errCnt, errEvType: 'end'})
+    return
+  }
   const imgElement = document.createElement('img')
   imgElement.style.position = 'absolute'
   imgElement.setAttribute('alt', it.title)
   imgElement.setAttribute('src',
     `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jp${idx === 4 || idx === 9 ? '' : 'g'}`)
   imgElement.addEventListener('load', () => {
-    temp = imgElement.cloneNode(true)
-    if (bsp(imgElement)) {
-      imgRefs.push(showTemplateInPlaceRef(imgElement, IMG_CONTAINER_REF))
-      imgRefsBckp.push(temp)
-      resolve({idx, errCnt})
-    }
+    doBsp(temp, imgElement)
+    imgRefs.push(showTemplateInPlaceRef(imgElement, IMG_CONTAINER_REF))
+    imgRefsBckp.push(imgElement.cloneNode(true))
+    resolve({idx, errCnt})
   })
   imgElement.addEventListener('error', errEv => reject({idx, errCnt: ++errCnt, errEvType: errEv.type}))
 }
