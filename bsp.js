@@ -1,42 +1,4 @@
 'use strict'
-const bspPool = [], P = [], SIZE_THRESHOLD = 10
-
-function bsp(it) {
-  const indexOfElWithMaxW = findMax('W')
-  const indexOfElWithMaxH = findMax('H')
-  if ('number' === typeof indexOfElWithMaxW) {
-    const temp = Math.abs(bspPool[indexOfElWithMaxW].W - it.width) <= Math.abs(bspPool[indexOfElWithMaxH].H - it.height)
-    const area = bspPool.splice(temp ? indexOfElWithMaxW : indexOfElWithMaxH, 1)[0]
-    P[1] = P[2] = true
-    if (area.W >= it.width) {
-      if (area.W !== it.width && area.W - it.width < SIZE_THRESHOLD) {
-        zoomSlightlyW(it, area.W)
-      } else if (area.H > it.height && area.H - it.height < SIZE_THRESHOLD) {
-        zoomSlightlyH(it, area.H, area.W)
-      }
-      if (it.height <= area.H) {
-        it.height === area.H && (P[2] = false)
-      } else {
-        backToCutWidth(it, area.H)
-      }
-      area.W === it.width && (P[1] = false)
-    } else {
-      const tempHeight = Math.ceil(it.height * area.W / it.width)
-      if (tempHeight <= area.H) {
-        (it.height = tempHeight) === area.H && (P[2] = false)
-        it.width = area.W
-      } else {
-        backToCutWidth(it, area.H)
-      }
-      area.W === it.width && (P[1] = false)
-    }
-    it.style.left = area.xs + 'px'
-    it.style.top = area.ys + 'px'
-    divideSpace(area, it)
-    return true
-  }
-  return false
-}
 
 function selectArea(it) {
   const indexOfElWithMaxW = findMax('W')

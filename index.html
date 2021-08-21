@@ -26,8 +26,8 @@
   <div class="formTemplateRoot"
        onkeydown="onEscape(event)">
     <div>
-      <label for="api_key">API key:</label><!--
-   --><input id="api_key"
+      <label for="apiKey">API key:</label><!--
+   --><input id="apiKey"
              maxlength="32"
              oninput="parseApiKey(event)"
              onkeydown="onEnter(event)"
@@ -36,7 +36,7 @@
     <div>
       <label for="tags">tags:</label><!--
    --><input id="tags"
-             oninput="parseTags(event)"
+             oninput="parse(event)"
              onkeydown="onEnter(event)"
              type="text">
     </div>
@@ -44,7 +44,7 @@
       <label for="photosCount">photos&nbsp;count:</label><!--
    --><input id="photosCount"
              min="1"
-             oninput="parseCount(event)"
+             oninput="parse(event)"
              onkeydown="onEnter(event)"
              type="number">
     </div>
@@ -69,29 +69,30 @@
               type="button">Anuluj</button>
       <button disabled
               id="ok_button"
-              onclick="sendPressed()"
+              onclick="okPressed()"
               type="button">OK</button>
     </div>
   </div>
 </template>
 <template id="loadingTemplate">
-  <div class="message red">
+  <div>
     LOADING...
   </div>
 </template>
 <template id="errorTemplate">
-  <div class="message">
+  <div>
     SNAFU
   </div>
 </template>
 <template id="loadedTemplate">
-  <div class="message">
+  <div>
     OK
   </div>
 </template>
 <dialog id="dialogContainer"
-        onmouseleave="showError()"
-        onmouseover="showError(true)"></dialog>
+        onmouseleave="switchMessageVisibility(true)"
+        onmouseover="switchMessageVisibility()"></dialog>
 <div id="imageContainer"></div>
+<div id="messageContainer"></div>
 </body>
 </html>

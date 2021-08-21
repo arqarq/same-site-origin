@@ -1,3 +1,4 @@
+'use strict'
 const bspPool = []
 
 class Area {
@@ -22,5 +23,5 @@ function findMax(key) {
 }
 
 bspPool.push(new Area(30, 30, 5, 5), new Area(0, 0, 10, 11), new Area(10, 0, 11, 10))
-console.log(findMax('W'))
-console.log(findMax('H'))
+console.log(findMax('W') === 2)
+console.log(findMax('H') === 1)
