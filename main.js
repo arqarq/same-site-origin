@@ -62,13 +62,13 @@ function createImg(it, idx, resolve, reject, errCnt) {
   let temp
 
   if (undefined === (temp = selectArea(it))) {
-    resolve({idx, errCnt, errEvType: 'end'})
+    resolve({idx: idx - 1, errCnt, errEvType: 'end'})
     return
   }
   const imgElement = document.createElement('img')
   imgElement.style.position = 'absolute'
   imgElement.alt = it.title
-  imgElement.src = `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jp${idx === 4 || idx === 9 ? '' : 'g'}`
+  imgElement.src = `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jp${idx === 4 || idx === 9 ? 'g' : 'g'}`
   imgElement.addEventListener('load', () => {
     doBsp(temp, imgElement)
     imgRefs.push(showTemplateInPlaceRef(IMG_CONTAINER_REF, imgElement))
