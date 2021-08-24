@@ -21,25 +21,13 @@ function dialogToTopRight(reset) {
 }
 
 function showTemplateInMessage(templateRef) {
-  clearRefInPlaceRef(MESSAGE_REF, tempRefForMessageContent)
+  tempRefForMessageContent?.remove()
   tempRefForMessageContent = MESSAGE_REF.appendChild(templateRef)
 }
 
 function showTemplateInDialog(templateRef) {
-  clearRefInPlaceRef(DIALOG_REF, tempRefForDialogContent)
+  tempRefForDialogContent?.remove()
   tempRefForDialogContent = DIALOG_REF.appendChild(templateRef)
-}
-
-function clearRefInPlaceRef(placeRef, templateRef) {
-  placeRef.contains(templateRef) && placeRef.removeChild(templateRef)
-}
-
-function showTemplateInPlaceRef(placeRef, templateRef) {
-  return placeRef.appendChild(templateRef)
-}
-
-function removeTemplateFromPlaceRef(templateRef, placeRef) {
-  placeRef.contains(templateRef) && placeRef.removeChild(templateRef)
 }
 
 function openCloseModal(open) {

@@ -1,4 +1,5 @@
 'use strict'
+const SIZE_THRESHOLD = 10, imgRefs = [], imgRefsBckp = [], bspPool = [], P = [], formData = {apiKey: null, tags: null, photosCount: '10'}
 let to, request, messagePermanent, okToSend, imgsWereAddedOnce, withCallback
 const imgRefs = [], imgRefsBckp = [], SIZE_THRESHOLD = 10, bspPool = [], P = [], formData = {apiKey: null, tags: null, photosCount: '10'}
 
@@ -65,24 +66,32 @@ function createImg(it, idx, resolve, reject, errCnt) {
     resolve({idx: idx - 1, errCnt, errEvType: 'end'})
     return
   }
-  const imgElement = document.createElement('img')
+  if (imgRefs[idx]) {
+    if (imgRefs[idx].errEvType) {
+      reject(imgRefs[idx])
+      return
+    }
+    doBsp(temp, imgRefs[idx])
+    resolve({idx, errCnt})
+    return
+  }
+  const imgElement = new Image()
   imgElement.style.position = 'absolute'
   imgElement.alt = it.title
-  imgElement.src = `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jp${idx === 4 || idx === 9 ? 'g' : 'g'}`
+  imgElement.src = `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jp${idx === 4 || idx === 9 ? '' : 'g'}` +
+    `?t=${new Date().getTime()}`
   imgElement.addEventListener('load', () => {
+    imgRefsBckp[idx] = {w: imgElement.width, h: imgElement.height}
     doBsp(temp, imgElement)
-    imgRefs.push(showTemplateInPlaceRef(IMG_CONTAINER_REF, imgElement))
-    imgRefsBckp.push(imgElement.cloneNode(true))
+    imgRefs[idx] = IMG_CONTAINER_REF.appendChild(imgElement)
     resolve({idx, errCnt})
   })
-  imgElement.addEventListener('error', errEv => reject({idx, errCnt: ++errCnt, errEvType: errEv.type}))
+  imgElement.addEventListener('error', errEv => reject(imgRefs[idx] = {idx, errCnt: ++errCnt, errEvType: errEv.type}))
 }
 
 function removeImgs() {
-  const imgCount = imgRefs.length
-  for (let i = 0; i < imgCount; i++) {
-    removeTemplateFromPlaceRef(...imgRefs.splice(0, 1), IMG_CONTAINER_REF)
-  }
+  imgRefs.forEach(it => it.errEvType || it.remove())
+  imgRefs.splice(0)
   imgRefsBckp.splice(0)
 }
 

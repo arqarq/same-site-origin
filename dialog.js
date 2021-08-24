@@ -4,7 +4,7 @@ function start() {
   if (request) {
     request.abort() // TODO AbortController?
     request = null
-    clearRefInPlaceRef(MESSAGE_REF, tempRefForMessageContent)
+    tempRefForMessageContent.remove()
     clearTimeout(to)
   }
   changeMessageVisibility(true)
