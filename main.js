@@ -1,7 +1,6 @@
 'use strict'
 const SIZE_THRESHOLD = 10, imgRefs = [], imgRefsBckp = [], bspPool = [], P = [], formData = {apiKey: null, tags: null, photosCount: '10'}
 let to, request, messagePermanent, okToSend, imgsWereAddedOnce, withCallback
-const imgRefs = [], imgRefsBckp = [], SIZE_THRESHOLD = 10, bspPool = [], P = [], formData = {apiKey: null, tags: null, photosCount: '10'}
 
 function prepareJson() {
   request = new XMLHttpRequest()
