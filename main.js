@@ -25,15 +25,15 @@ function addImagesOrShowErrorMessage(object) {
   request = null
   if ((this?.responseText ? (object = JSON.parse(this.responseText)) : object).stat === 'ok') {
     (imgsWereAddedOnce = true) && dialogToTopRight(false)
-    addImages(object)
+    addImages(jsonWithImages = object)
     return
   }
   showMessage(REFS.errorTemplate, false)
   console.error(object.message)
 }
 
-function addImages(parsedJson) {
-  removeImgs()
+function addImages(parsedJson, fromResize) {
+  !fromResize && removeImgs()
   initBspPool()
   parsedJson.photos.photo.reduce((previousValue, currentValue, currentIndex) => previousValue.then(data => {
     if ('end' === data.errEvType) {
@@ -58,6 +58,21 @@ function addImages(parsedJson) {
     })
 }
 
+function resizeEnd() {
+  if (imgsWereAddedOnce) {
+    let temp
+
+    removeImageElementsFromDom()
+    imgRefsBckp.forEach((it, idx) => {
+      if (!(temp = imgRefs[idx]).errEvType) {
+        imgRefs[idx].width = it.w
+        imgRefs[idx].height = it.h
+      }
+    })
+    addImages(jsonWithImages, true)
+  }
+}
+
 function createImg(it, idx, resolve, reject, errCnt) {
   let temp
 
@@ -70,30 +85,38 @@ function createImg(it, idx, resolve, reject, errCnt) {
       reject(imgRefs[idx])
       return
     }
-    doBsp(temp, imgRefs[idx])
+    imgRefs[idx] = doBspAndReturnImgRef(temp, imgRefs[idx])
     resolve({idx, errCnt})
     return
   }
   const imgElement = new Image()
   imgElement.style.position = 'absolute'
   imgElement.alt = it.title
-  imgElement.src = `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jp${idx === 4 || idx === 9 ? '' : 'g'}` +
+  imgElement.src = `https://farm${it.farm}.staticflickr.com/${it.server}/${it.id}_${it.secret}.jp${idx === 4 || idx === 9 ? 'g' : 'g'}` +
     `?t=${new Date().getTime()}`
   imgElement.addEventListener('load', () => {
     imgRefsBckp[idx] = {w: imgElement.width, h: imgElement.height}
-    doBsp(temp, imgElement)
-    imgRefs[idx] = IMG_CONTAINER_REF.appendChild(imgElement)
+    imgRefs[idx] = doBspAndReturnImgRef(temp, imgElement)
     resolve({idx, errCnt})
   })
   imgElement.addEventListener('error', errEv => reject(imgRefs[idx] = {idx, errCnt: ++errCnt, errEvType: errEv.type}))
 }
 
 function removeImgs() {
-  imgRefs.forEach(it => it.errEvType || it.remove())
+  removeImageElementsFromDom()
   imgRefs.splice(0)
   imgRefsBckp.splice(0)
 }
 
 function initBspPool() {
   bspPool.splice(0, bspPool.length, new Area(0, 0, window.innerWidth, window.innerHeight))
+}
+
+function removeImageElementsFromDom() {
+  imgRefs.forEach(it => it.errEvType || it.remove())
+}
+
+function doBspAndReturnImgRef(areaIdx, img) {
+  doBsp(areaIdx, img)
+  return IMG_CONTAINER_REF.appendChild(img)
 }
