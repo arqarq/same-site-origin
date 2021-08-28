@@ -38,7 +38,7 @@ function okPressed() {
 
 function cancel(skipSettingMessageNotPermanent) {
   showTemplateInDialog(REFS.startTemplate)
-  imgsWereAddedOnce && dialogToTopRight(false)
+  jsonWithImages && dialogToTopRight(false)
   !skipSettingMessageNotPermanent && changeMessageVisibility(false)
 }
 

@@ -1,6 +1,6 @@
 'use strict'
 const SIZE_THRESHOLD = 10, imgRefs = [], imgRefsBckp = [], bspPool = [], P = [], formData = {apiKey: null, tags: null, photosCount: '10'}
-let to, request, messagePermanent, okToSend, imgsWereAddedOnce, withCallback
+let to, request, messagePermanent, okToSend, withCallback, jsonWithImages
 
 function prepareJson() {
   request = new XMLHttpRequest()
@@ -24,7 +24,7 @@ function prepareJsonWithJsonCallback() {
 function addImagesOrShowErrorMessage(object) {
   request = null
   if ((this?.responseText ? (object = JSON.parse(this.responseText)) : object).stat === 'ok') {
-    (imgsWereAddedOnce = true) && dialogToTopRight(false)
+    dialogToTopRight(false)
     addImages(jsonWithImages = object)
     return
   }
@@ -59,7 +59,7 @@ function addImages(parsedJson, fromResize) {
 }
 
 function resizeEnd() {
-  if (imgsWereAddedOnce) {
+  if (jsonWithImages) {
     let temp
 
     removeImageElementsFromDom()
