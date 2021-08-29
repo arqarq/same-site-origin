@@ -1,3 +1,22 @@
+try {
+  if (process && require) {
+    const $findMax = (function () {
+      this.bspPool = require('./main').bspPool
+
+      return key => findMax(key)
+    })()
+    const $doBsp = (function () {
+      this.Area = require('./util').Area
+      this.P = require('./main').P
+      this.SIZE_THRESHOLD = require('./main').SIZE_THRESHOLD
+
+      return (idx, it) => doBsp(idx, it)
+    })()
+    module.exports = {findMax: $findMax, doBsp: $doBsp}
+  }
+} catch {
+}
+
 'use strict'
 
 function selectArea(it) {

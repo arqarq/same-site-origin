@@ -59,3 +59,10 @@ function errorToConsole(data) {
 function summaryToConsole(data) {
   console.log(`zapytań: ${data.idx + 1}/${formData.photosCount}, w tym z błędem: ${data.errCnt}`)
 }
+
+try {
+  if (process) {
+    module.exports = {Area}
+  }
+} catch {
+}

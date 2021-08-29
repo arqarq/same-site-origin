@@ -120,3 +120,10 @@ function doBspAndReturnImgRef(areaIdx, img) {
   doBsp(areaIdx, img)
   return IMG_CONTAINER_REF.appendChild(img)
 }
+
+try {
+  if (process) {
+    module.exports = {bspPool, P, SIZE_THRESHOLD}
+  }
+} catch {
+}
