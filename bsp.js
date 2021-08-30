@@ -12,7 +12,7 @@ try {
 
       return (idx, it) => doBsp(idx, it)
     })()
-    module.exports = {findMax: $findMax, doBsp: $doBsp}
+    module.exports = {findMax: $findMax, doBsp: $doBsp, selectArea}
   }
 } catch {
 }
