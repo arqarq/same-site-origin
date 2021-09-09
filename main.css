@@ -37,11 +37,11 @@ div.formTemplateRoot input:not([type=radio]) {
 }
 
 div.formTemplateRoot label[for=requestKindWithCallback] {
-  margin-left: calc(2 * var(--DEFAULT-PADDING))
+  margin-left: calc(1.5 * var(--DEFAULT-PADDING))
 }
 
 div.formTemplateRoot input[type=radio] {
-  margin: 3px 0 0 3px
+  margin: 3px 0 0 4px
 }
 
 div.formTemplateRoot div:first-child,
