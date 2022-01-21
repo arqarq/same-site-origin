@@ -4,7 +4,7 @@ const DIALOG_REF = document.querySelector('dialog#dialogContainer')
 const IMG_CONTAINER_REF = document.querySelector('div#imageContainer')
 const MESSAGE_REF = document.querySelector('div#messageContainer')
 const RESIZE_TIMEOUT_MS = 500
-let tempRefForDialogContent, tempRefForMessageContent, resizeTimeout
+let OK_BUTTON_REF, tempRefForDialogContent, tempRefForMessageContent, resizeTimeout
 
 document.querySelectorAll('template').forEach(it => {
   const temp = REFS['$' + it.id] = it.content.firstElementChild
@@ -23,3 +23,4 @@ window.addEventListener('resize', function () {
     clearTimeout(resizeTimeout)
   }, RESIZE_TIMEOUT_MS)
 })
+window.addEventListener('load', loadFormData, {once: true})

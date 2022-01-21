@@ -60,6 +60,18 @@ function summaryToConsole(data) {
   console.log(`zapytań: ${data.idx + 1}/${formData.photosCount}, w tym z błędem: ${data.errCnt}`)
 }
 
+function storeFormData(data) {
+  localStorage.setItem('formData', JSON.stringify(data))
+}
+
+function loadFormData() {
+  let data
+
+  if (data = JSON.parse(localStorage.getItem('formData'))) {
+    Object.keys(data).forEach(key => formData[key] = data[key])
+  }
+}
+
 try {
   if (process) {
     module.exports = {Area}

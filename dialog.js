@@ -10,6 +10,7 @@ function start() {
   changeMessageVisibility(true)
   dialogToTopRight(true)
   showTemplateInDialog(REFS.formTemplate)
+  OK_BUTTON_REF = document.querySelector('button#ok_button')
   const element = document.querySelector('input#apiKey')
   element.value = formData.apiKey
   element.focus()
@@ -31,6 +32,7 @@ function okPressed() {
   showMessage(REFS.loadingTemplate, true)
   cancel(true)
   to = setTimeout(() => {
+    storeFormData(formData)
     withCallback ? prepareJsonWithJsonCallback() : prepareJson()
     clearTimeout(to)
   }, 500)
@@ -46,19 +48,38 @@ function parse(ev) {
   formData[ev.target.id] = ev.target.value
 }
 
+function parsePhotosCount(ev) {
+  const count = formData[ev.target.id] = ev.target.value
+  if (count > 0 && formData.apiKey?.length === 32) {
+    okButtonEnable(OK_BUTTON_REF)
+    return
+  }
+  okButtonDisable(OK_BUTTON_REF)
+}
+
 function parseKind(ev) {
   withCallback = ev.target.value
 }
 
 function parseApiKey(ev) {
-  const okButtonRef = document.querySelector('button#ok_button')
-  if (ev && (formData[ev.target.id] = ev.target.value).length === 32 || formData.apiKey.length === 32) {
-    okButtonRef.removeAttribute('disabled')
-    okToSend = true
+  const apiKey = ev && (formData[ev.target.id] = ev.target.value)
+  if (formData.photosCount > 0 && (apiKey?.length === 32 || formData.apiKey?.length === 32)) {
+    okButtonEnable(OK_BUTTON_REF)
     return
   }
+  okButtonDisable(OK_BUTTON_REF)
+}
+
+function okButtonDisable(okButtonRef) {
   if (!okButtonRef.hasAttribute('disabled')) {
     okButtonRef.setAttribute('disabled', '')
     okToSend = false
+  }
+}
+
+function okButtonEnable(okButtonRef) {
+  if (okButtonRef.hasAttribute('disabled')) {
+    okButtonRef.removeAttribute('disabled')
+    okToSend = true
   }
 }
