@@ -3,3 +3,5 @@ Showing photos from flickr API (for given tags), with resizing/positioning to wi
 
 HTML, CSS and Vanilla JS framework ;)  
 Tests in Node.js
+
+https://flickr-images-fitter.herokuapp.com
