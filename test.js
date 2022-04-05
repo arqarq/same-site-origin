@@ -1,7 +1,5 @@
 'use strict'
-const {findMax, doBsp, selectArea} = require('./bsp')
-const {Area} = require('./util')
-const {bspPool} = require('./main')
+const {findMax, doBsp, selectArea} = require('./bsp'), {Area} = require('./util'), {bspPool} = require('./imgs')
 let i = 0
 
 console.log(++i + '.')

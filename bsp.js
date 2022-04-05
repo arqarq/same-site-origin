@@ -1,14 +1,14 @@
 try {
   if (process && require) {
     const $findMax = (function () {
-      this.bspPool = require('./main').bspPool
+      this.bspPool = require('./imgs').bspPool
 
       return key => findMax(key)
     })()
     const $doBsp = (function () {
       this.Area = require('./util').Area
-      this.P = require('./main').P
-      this.SIZE_THRESHOLD = require('./main').SIZE_THRESHOLD
+      this.P = require('./imgs').P
+      this.SIZE_THRESHOLD = require('./imgs').SIZE_THRESHOLD
 
       return (idx, it) => doBsp(idx, it)
     })()

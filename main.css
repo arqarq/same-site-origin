@@ -13,6 +13,11 @@ dialog {
   z-index: 1
 }
 
+.move-right {
+  transition: right 1s, opacity 1s .25s;
+  opacity: 0
+}
+
 .transparent {
   transition: opacity 1s var(--MESSAGE_DISAPPEAR_TIMEOUT);
   opacity: 0
@@ -23,53 +28,50 @@ dialog {
   opacity: 1
 }
 
-div.formTemplateRoot input#apiKey {
+.formTemplateRoot input#apiKey {
   width: 32ch
 }
 
-div.formTemplateRoot input#tags,
-div.formTemplateRoot input#photosCount {
+.formTemplateRoot input#tags,
+.formTemplateRoot input#photosCount {
   width: 100%
 }
 
-div.formTemplateRoot input:not([type=radio]) {
+.formTemplateRoot input:not([type=radio]) {
   margin-left: var(--DEFAULT-PADDING)
 }
 
-div.formTemplateRoot label[for=requestKindWithCallback] {
+.formTemplateRoot label[for=requestKindWithCallback] {
   margin-left: calc(1.5 * var(--DEFAULT-PADDING))
 }
 
-div.formTemplateRoot input[type=radio] {
+.formTemplateRoot input[type=radio] {
   margin: 3px 0 0 4px
 }
 
-div.formTemplateRoot div:first-child,
-div.formTemplateRoot div:nth-child(2),
-div.formTemplateRoot div:nth-child(3),
-div.formTemplateRoot div:nth-child(4) {
+.formTemplateRoot div:not(:last-child) {
   margin-bottom: var(--DEFAULT-PADDING)
 }
 
-div.formTemplateRoot div:nth-child(2),
-div.formTemplateRoot div:nth-child(3),
-div.formTemplateRoot div:last-child {
+.formTemplateRoot div:nth-child(2),
+.formTemplateRoot div:nth-child(3),
+.formTemplateRoot div:last-child {
   display: flex
 }
 
-div.formTemplateRoot div:nth-child(4) {
+.formTemplateRoot div:nth-child(4) {
   text-align: center
 }
 
-div.formTemplateRoot div:last-child {
+.formTemplateRoot div:last-child {
   justify-content: space-around
 }
 
-div.formTemplateRoot button {
+.formTemplateRoot button {
   flex-grow: 1
 }
 
-div#imageContainer {
+#imageContainer {
   /*align-items: center;*/
   /*display: flex;*/
   /*flex-wrap: wrap;*/
@@ -80,7 +82,7 @@ div#imageContainer {
   height: 100%
 }
 
-div#messageContainer div {
+#messageContainer div {
   height: 16px;
   bottom: calc(var(--DEFAULT-PADDING) / 2);
   left: calc(var(--DEFAULT-PADDING) / 2);

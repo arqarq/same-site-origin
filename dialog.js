@@ -2,22 +2,21 @@
 
 function start() {
   if (request) {
+    clearTimeout(to)
     request.abort() // TODO AbortController?
     request = null
     tempRefForMessageContent.remove()
-    clearTimeout(to)
   }
-  changeMessageVisibility(true)
-  dialogToTopRight(true)
   showTemplateInDialog(REFS.formTemplate)
-  OK_BUTTON_REF = document.querySelector('button#ok_button')
-  const element = document.querySelector('input#apiKey')
+  OK_BUTTON_REF = document.querySelector('#ok_button')
+  parseApiKey()
+  const element = document.querySelector('#apiKey')
   element.value = formData.apiKey
   element.focus()
-  document.querySelector('input#tags').value = formData.tags
-  document.querySelector('input#photosCount').value = formData.photosCount
-  document.querySelector(`input#requestKind${withCallback ? 'WithCallback' : ''}`).checked = true
-  parseApiKey()
+  document.querySelector('#tags').value = formData.tags
+  document.querySelector('#photosCount').value = formData.photosCount
+  document.querySelector(`#requestKind${withCallback ? 'WithCallback' : ''}`).checked = true
+  !jsonWithImages && dialogToTopRightPrepare()
 }
 
 function onEnter(ev) {
@@ -29,19 +28,39 @@ function onEscape(ev) {
 }
 
 function okPressed() {
+  if (jsonWithImages) {
+    showTemplateInDialog(REFS.startTemplate)
+  } else {
+    DIALOG_REF.classList.add('move-right')
+  }
   showMessage(REFS.loadingTemplate, true)
-  cancel(true)
   to = setTimeout(() => {
+    clearTimeout(to)
     storeFormData(formData)
     withCallback ? prepareJsonWithJsonCallback() : prepareJson()
-    clearTimeout(to)
-  }, 500)
+  }, 100)
 }
 
-function cancel(skipSettingMessageNotPermanent) {
+function cancel() {
   showTemplateInDialog(REFS.startTemplate)
-  jsonWithImages && dialogToTopRight(false)
-  !skipSettingMessageNotPermanent && changeMessageVisibility(false)
+  if (jsonWithImages) {
+    changeElementTransparency(DIALOG_REF, false)
+  } else {
+    DIALOG_REF.style.removeProperty('left')
+    DIALOG_REF.style.removeProperty('right')
+  }
+  changeMessageVisibility(false)
+}
+
+function transitionEnd() {
+  if (transitionEndRanOnce) {
+    showTemplateInDialog(REFS.startTemplate)
+    DIALOG_REF.classList.remove('move-right')
+    DIALOG_REF.classList.add('transparent')
+    DIALOG_REF.ontransitionend = null
+    return
+  }
+  transitionEndRanOnce = true
 }
 
 function parse(ev) {

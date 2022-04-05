@@ -1,10 +1,8 @@
 'use strict'
-const DEFAULT_PADDING = getComputedStyle(document.querySelector(':root')).getPropertyValue('--DEFAULT-PADDING'), REFS = {}
-const DIALOG_REF = document.querySelector('dialog#dialogContainer')
-const IMG_CONTAINER_REF = document.querySelector('div#imageContainer')
-const MESSAGE_REF = document.querySelector('div#messageContainer')
-const RESIZE_TIMEOUT_MS = 500
-let OK_BUTTON_REF, tempRefForDialogContent, tempRefForMessageContent, resizeTimeout
+const DEFAULT_PADDING = getComputedStyle(document.querySelector(':root')).getPropertyValue('--DEFAULT-PADDING'), REFS = {},
+  DIALOG_REF = document.querySelector('#dialogContainer'), IMG_CONTAINER_REF = document.querySelector('#imageContainer'),
+  MESSAGE_REF = document.querySelector('#messageContainer'), RESIZE_TIMEOUT_MS = 500
+let OK_BUTTON_REF, tempRefForDialogContent, tempRefForMessageContent, resizeTimeout, transitionEndRanOnce
 
 document.querySelectorAll('template').forEach(it => {
   const temp = REFS['$' + it.id] = it.content.firstElementChild
@@ -15,12 +13,12 @@ document.querySelectorAll('template').forEach(it => {
   })
 })
 showTemplateInDialog(REFS.startTemplate)
-openCloseModal(true)
+DIALOG_REF.setAttribute('open', '')
 window.addEventListener('resize', function () {
   clearTimeout(resizeTimeout)
   resizeTimeout = setTimeout(() => {
-    resizeEnd()
     clearTimeout(resizeTimeout)
+    resizeEnd()
   }, RESIZE_TIMEOUT_MS)
 })
 window.addEventListener('load', loadFormData, {once: true})

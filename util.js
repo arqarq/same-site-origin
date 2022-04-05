@@ -9,15 +9,9 @@ class Area {
   }
 }
 
-function dialogToTopRight(reset) {
-  makeElementTransparent(DIALOG_REF, reset)
-  if (reset) {
-    DIALOG_REF.style.removeProperty('left')
-    DIALOG_REF.style.removeProperty('right')
-    return
-  }
-  DIALOG_REF.style.left = 'unset'
-  DIALOG_REF.style.right = `${DEFAULT_PADDING}`
+function dialogToTopRightPrepare() {
+  DIALOG_REF.style.right = DIALOG_REF.getBoundingClientRect().left + 'px'
+  DIALOG_REF.style.left = 'auto'
 }
 
 function showTemplateInMessage(templateRef) {
@@ -30,12 +24,8 @@ function showTemplateInDialog(templateRef) {
   tempRefForDialogContent = DIALOG_REF.appendChild(templateRef)
 }
 
-function openCloseModal(open) {
-  open ? DIALOG_REF.setAttribute('open', '') : DIALOG_REF.removeAttribute('open')
-}
-
 function switchMessageVisibility(setTransparent) {
-  !messagePermanent && makeElementTransparent(MESSAGE_REF, !setTransparent)
+  !messagePermanent && changeElementTransparency(MESSAGE_REF, !setTransparent)
 }
 
 function showMessage(refTemplate, setPermanent) {
@@ -45,10 +35,10 @@ function showMessage(refTemplate, setPermanent) {
 
 function changeMessageVisibility(setPermanent) {
   messagePermanent = setPermanent
-  makeElementTransparent(MESSAGE_REF, setPermanent)
+  changeElementTransparency(MESSAGE_REF, setPermanent)
 }
 
-function makeElementTransparent(ref, removeOrSet) {
+function changeElementTransparency(ref, removeOrSet) {
   removeOrSet ? ref.classList.remove('transparent') : ref.classList.add('transparent')
 }
 

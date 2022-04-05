@@ -11,9 +11,9 @@
   <script defer
           src="util.js"></script>
   <script defer
-          src="first.js"></script>
+          src="init.js"></script>
   <script defer
-          src="main.js"></script>
+          src="imgs.js"></script>
   <script defer
           src="dialog.js"></script>
   <script defer
@@ -95,7 +95,8 @@
 </template>
 <dialog id="dialogContainer"
         onmouseleave="switchMessageVisibility(true)"
-        onmouseover="switchMessageVisibility()"></dialog>
+        onmouseover="switchMessageVisibility()"
+        ontransitionend="transitionEnd()"></dialog>
 <div id="imageContainer"></div>
 <div id="messageContainer"></div>
 </body>
