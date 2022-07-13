@@ -23,7 +23,10 @@ function prepareJsonWithJsonCallback() {
 
 function addImagesOrShowErrorMessage(object) {
   request = null
-  if ((this?.responseText ? (object = JSON.parse(this.responseText)) : object).stat === 'ok') {
+  if (this?.responseText) {
+    object = JSON.parse(this.responseText)
+  }
+  if (object.stat === 'ok' && object.total) {
     DIALOG_REF.style.right = `${DEFAULT_PADDING}`
     addImages(jsonWithImages = object)
     return
