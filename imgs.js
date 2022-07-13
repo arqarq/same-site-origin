@@ -26,13 +26,13 @@ function addImagesOrShowErrorMessage(object) {
   if (this?.responseText) {
     object = JSON.parse(this.responseText)
   }
-  if (object.stat === 'ok' && object.total) {
+  if (object.stat === 'ok' && object.photos?.total) {
     DIALOG_REF.style.right = `${DEFAULT_PADDING}`
     addImages(jsonWithImages = object)
     return
   }
   showMessage(REFS.errorTemplate, false)
-  console.error(object.total === 0 ? 'No photos for given tags' : object.message)
+  console.error(object.photos?.total === 0 ? 'No photos for given tags' : object.message)
 }
 
 function addImages(parsedJson, fromResize) {
