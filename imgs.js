@@ -32,7 +32,7 @@ function addImagesOrShowErrorMessage(object) {
     return
   }
   showMessage(REFS.errorTemplate, false)
-  console.error(object.message)
+  console.error(object.total === 0 ? 'No photos for given tags' : object.message)
 }
 
 function addImages(parsedJson, fromResize) {
